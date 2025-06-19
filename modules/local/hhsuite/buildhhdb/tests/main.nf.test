@@ -15,8 +15,8 @@ nextflow_process {
             process {
                 """
                 input[0] = [
-                    [ id:'test', single_end:false ], // meta map
-                    file("${moduleDir}/tests/test_a3m", checkIfExists: true)
+                    [ id:'test' ],
+                    file("${moduleDir}/tests/test_a3m/*", checkIfExists: true)
                     ]
                 """
             }
@@ -32,12 +32,12 @@ nextflow_process {
                                 File folder = new File(get(0).get(1))
                                 File[] listOfFiles = folder.listFiles()
                                 listOfFiles = listOfFiles.sort { it.name }
-                                assert listOfFiles.length == 7
+                                assert listOfFiles.length == 13
                                 assert snapshot("${get(0).get(1)}/${listOfFiles[0].name}").match("test_a3m_a3m.ffdata")
                                 assert snapshot("${get(0).get(1)}/${listOfFiles[1].name}").match("test_a3m_a3m.ffindex")
                                 assert snapshot("${get(0).get(1)}/${listOfFiles[2].name}").match("test_a3m_cs219.ffdata")
                                 assert snapshot("${get(0).get(1)}/${listOfFiles[3].name}").match("test_a3m_cs219.ffindex")
-                                assert snapshot("${get(0).get(1)}/${listOfFiles[4].name}").match("test_a3m_cs219.log1")
+                                assert file("${get(0).get(1)}/${listOfFiles[4].name}").exists()
                                 assert file("${get(0).get(1)}/${listOfFiles[5].name}").exists()
                                 assert snapshot("${get(0).get(1)}/${listOfFiles[6].name}").match("test_a3m_hmm.ffindex")
                             }
@@ -57,8 +57,8 @@ nextflow_process {
             process {
                 """
                 input[0] = [
-                    [ id:'test', single_end:false ], // meta map
-                    file("${moduleDir}/tests/test_a3m", checkIfExists: true)
+                    [ id:'test' ],
+                    file("${moduleDir}/tests/test_a3m/*", checkIfExists: true)
                     ]
                 """
             }
