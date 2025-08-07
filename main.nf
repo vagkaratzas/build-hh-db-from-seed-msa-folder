@@ -2,6 +2,7 @@
 
 include { HHSUITE_REFORMAT  } from "./modules/nf-core/hhsuite/reformat/main.nf"
 include { HHSUITE_BUILDHHDB } from "./modules/local/hhsuite/buildhhdb/main.nf"
+include { HHSUITE_HHSUITEDB } from "./modules/local/hhsuite/hhsuitedb/main.nf"
 
 workflow {
     def counter = 0
@@ -21,5 +22,6 @@ workflow {
         .map { file ->
             return [[id:params.db_name], file]
         }
-    HHSUITE_BUILDHHDB(a3m_ch).hh_db
+    // HHSUITE_BUILDHHDB( a3m_ch )
+    HHSUITE_HHSUITEDB( a3m_ch )
 }
