@@ -54,5 +54,5 @@ workflow {
     TEST_HHSUITE_DBS( HHSUITE_REFORMAT.out.msa.first(), HHSUITE_BUILDHHDB.out.hh_db )
     ch_versions = ch_versions.mix( TEST_HHSUITE_DBS.out.versions )
 
-    ch_versions.view()
+    // ch_versions.view()
 }
