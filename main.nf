@@ -10,35 +10,38 @@ workflow {
 
     ch_versions = Channel.empty()
     ch_hh_dbs   = Channel.empty()
-    def counter = 0
 
     if (params.is_pfam) {
         ch_pfam_link = Channel.of([ [ id: 'pfam_link' ], params.pfam_link ])
 
-        ch_alignments = PREPROCESS_PFAM( ch_pfam_link, params.existing_pfam_path ).alignments
+        PREPROCESS_PFAM( ch_pfam_link, params.existing_pfam_path ).alignments
         ch_versions = ch_versions.mix( PREPROCESS_PFAM.out.versions )
+
+        ch_alignments = PREPROCESS_PFAM.out.alignments
+            .transpose()
+            .map { meta, file ->
+                [[id: file.getSimpleName()], file]
+            }
     } else {
         ch_alignments = Channel.fromPath(params.input, checkIfExists: true)
 
         ch_alignments = ch_alignments
             .map { filepath ->
-                counter += 1
-                return [[id: "aln_${counter}"], file(filepath)]
+                [[id: filepath.getSimpleName()], file(filepath)]
             }
     }
 
-    // HHSUITE_REFORMAT( ch_alignments, "sto", "a3m" )
-    // ch_versions = ch_versions.mix( HHSUITE_REFORMAT.out.versions )
+    HHSUITE_REFORMAT( ch_alignments, "sto", "a3m" )
+    ch_versions = ch_versions.mix( HHSUITE_REFORMAT.out.versions )
 
-    // ch_a3m = HHSUITE_REFORMAT.out.msa
-    //     .map { meta, file ->
-    //         return [file]
-    //     }
-    //     .collect()
-    //     .map { file ->
-    //         return [[id:params.db_name], file]
-    //     }
-
+    ch_a3m = HHSUITE_REFORMAT.out.msa
+        .map { meta, file ->
+            return [file]
+        }
+        .collect()
+        .map { file ->
+            return [[id:params.db_name], file]
+        }
 
     // HHSUITE_BUILDHHDB( ch_a3m )
     // ch_versions = ch_versions.mix( HHSUITE_BUILDHHDB.out.versions )
