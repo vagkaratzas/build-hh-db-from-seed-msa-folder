@@ -12,6 +12,7 @@ process SPLIT_ALIGNMENTS {
 
     output:
     tuple val(meta), path("alignments/*"), emit: alignments
+    tuple val(meta), path("mapping.tsv") , emit: mapping
     path "versions.yml"                  , emit: versions
 
     when:
@@ -24,7 +25,8 @@ process SPLIT_ALIGNMENTS {
 
     split_alignments.py \\
         --downloaded_pfam_seed ${aln} \\
-        --out_folder alignments
+        --out_folder alignments \\
+        --mapping_file mapping.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
