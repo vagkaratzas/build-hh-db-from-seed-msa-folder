@@ -20,6 +20,7 @@ workflow PREPROCESS_PFAM {
     ch_versions = ch_versions.mix( SPLIT_ALIGNMENTS.out.versions )
 
     emit:
-    versions = ch_versions
+    versions   = ch_versions
     alignments = SPLIT_ALIGNMENTS.out.alignments
+    mapping    = SPLIT_ALIGNMENTS.out.mapping
 }
