@@ -17,8 +17,7 @@ def split_stockholm_gz(input_file, output_dir):
                 pfam_id = None
             elif line.startswith("#=GF AC"):
                 # Direct slice instead of multiple splits
-                acc = line[8:].strip()   # Get everything after "#=GF AC"
-                pfam_id = acc.split(".", 1)[0]
+                pfam_id = line[8:].strip()   # Get everything after "#=GF AC"
                 block.append(line)
             elif line.startswith("//"):
                 block.append(line)
